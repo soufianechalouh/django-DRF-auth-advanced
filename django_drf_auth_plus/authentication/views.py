@@ -1,7 +1,7 @@
 from rest_framework.generics import GenericAPIView
 from rest_framework.response import Response
 from rest_framework import status, views
-from .serializers import RegisterSerializer, EmailValidationSerializer
+from .serializers import RegisterSerializer, EmailValidationSerializer, LoginSerializer
 from rest_framework_simplejwt.tokens import RefreshToken
 from .models import User
 from .utils import Util
@@ -59,3 +59,14 @@ class VerifyEmail(views.APIView):
             return Response({"error": "Invalid token, request a new one"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error", f"Unexpected error {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginAPIView(GenericAPIView):
+    serializer_class = LoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
