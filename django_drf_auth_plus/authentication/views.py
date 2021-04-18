@@ -37,7 +37,7 @@ class RegisterView(GenericAPIView):
 class VerifyEmail(GenericAPIView):
 
     def get(self, request):
-        token = request.GET.get["token"]
+        token = request.GET.get("token")
 
         try:
 
@@ -50,7 +50,7 @@ class VerifyEmail(GenericAPIView):
 
         except jwt.ExpiredSignatureError as expired:
             return Response({"error": "Activation expired"}, status=status.HTTP_400_BAD_REQUEST)
-        except jwt.DecodeError:
+        except jwt.exceptions.DecodeError:
             return Response({"error": "Invalid token, request a new one"}, status=status.HTTP_400_BAD_REQUEST)
         except Exception as e:
             return Response({"error", f"Unexpected error {str(e)}"}, status=status.HTTP_400_BAD_REQUEST)
